@@ -72,7 +72,7 @@ public class Snake {
         changePoints.put(pair, direction);
     }
 
-    public void updateDirections() {
+    private void updateDirections() {
         Set<Pair<Integer, Integer>> locationsToRemove = new HashSet<>();
         for (PlayerTile tile : snakeTiles) {
             for (Pair<Integer, Integer> location : changePoints.keySet()) {
