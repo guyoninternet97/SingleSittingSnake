@@ -8,12 +8,15 @@ import java.util.*;
 public class Snake {
     private ArrayList<PlayerTile> snakeTiles;
     private SnakePanel storedPanel;
+    //A map which keeps track of points that body tiles need th change direction on, and what directino
     private Map<Pair<Integer, Integer>, PlayerTile.DIRECTION> changePoints;
 
+    //Array lists to keep track of points occupied b the snake
     private ArrayList<Pair<Integer, Integer>> allPossibleAreas;
     private ArrayList<Pair<Integer, Integer>> occupiedAreas;
 
     public Snake(SnakePanel panel) {
+        //Initialize stuff
         storedPanel = panel;
         snakeTiles = new ArrayList<>();
         snakeTiles.add(new PlayerTile(storedPanel, 10, 10));
@@ -34,33 +37,42 @@ public class Snake {
     }
 
     public void update() {
+        occupiedAreas.clear();
 
+        //Populate the points occupied by the snake
         for (PlayerTile tile : snakeTiles) {
             occupiedAreas.add(new Pair<>(tile.x, tile.y)); //populate occupied area set
         }
 
-        for (PlayerTile tile : snakeTiles) {
-            tile.update();
-        }
 
         for (PlayerTile tile : snakeTiles) {
-            for (PlayerTile tile2 : snakeTiles) {
-                if (tile.x == tile2.x && tile.y == tile2.y && tile != tile2) {
-                    System.exit(0);
-                }
+            //Update the body tiles
+            tile.update();
+
+            //Ensure the head hasn't run into a body tile
+            if (tile != snakeTiles.get(0) && tile.x == snakeTiles.get(0).x && tile.y == snakeTiles.get(0).y) {
+                System.exit(0);
             }
         }
 
+
         updateDirections();
 
+        //This handles when you get a fruit ---------------
+        //Initialize a pair for the headlocation
         Pair<Integer, Integer> headLocationPair = new Pair<>(getHead().x, getHead().y);
+
+        //If you've gotten the fruit
         if (headLocationPair.equals(Grid.instance.getFruitLocation())) {
+            //Make a copy of the possibleAreas
             ArrayList<Pair<Integer, Integer>> possibleAreasCopy = (ArrayList<Pair<Integer, Integer>>)allPossibleAreas.clone();
+            //Find the areas on the board which are not occupied
             possibleAreasCopy.removeAll(occupiedAreas);
 
+            //Generate new X and Y using possible remaining values
             Random rnd = new Random();
-            int xLocation = occupiedAreas.get(rnd.nextInt(occupiedAreas.size() - 1) + 1).getKey();
-            int yLocation = occupiedAreas.get(rnd.nextInt(occupiedAreas.size() - 1) + 1).getValue();
+            int xLocation = possibleAreasCopy.get(rnd.nextInt(possibleAreasCopy.size()) + 1).getKey();
+            int yLocation = possibleAreasCopy.get(rnd.nextInt(possibleAreasCopy.size()) + 1).getValue();
             Grid.instance.regenerateFruit(xLocation, yLocation);
 
             addTile();
@@ -68,10 +80,12 @@ public class Snake {
 
     }
 
+    //Add a point that, when body tiles pass over, need to change direction
     public void addChangePoint(Pair<Integer, Integer> pair, PlayerTile.DIRECTION direction) {
         changePoints.put(pair, direction);
     }
 
+    //This is in charge of the body tiles turning
     private void updateDirections() {
         Set<Pair<Integer, Integer>> locationsToRemove = new HashSet<>();
         for (PlayerTile tile : snakeTiles) {

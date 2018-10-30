@@ -1,12 +1,11 @@
 package proulx;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class SnakeTestMain {
     public static void main(String[] args) {
         JFrame myFrame = new JFrame("Snake");
-        myFrame.setSize(400, 400);
+        myFrame.setSize(448, 448);
         myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SnakePanel panel = new SnakePanel();
 
