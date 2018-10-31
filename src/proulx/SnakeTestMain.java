@@ -5,7 +5,7 @@ import javax.swing.*;
 public class SnakeTestMain {
     public static void main(String[] args) {
         JFrame myFrame = new JFrame("Snake");
-        myFrame.setSize(448, 448);
+        myFrame.setSize(336, 384);
         myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SnakePanel panel = new SnakePanel();
 

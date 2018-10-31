@@ -58,7 +58,7 @@ public class PlayerTile {
             y++;
         }
 
-        if (x < 0 || x > Grid.GRID_WIDTH - 1 || y < 0 || y > Grid.GRID_HEIGHT - 1) {
+        if (x < 0 || x > Grid.GRID_WIDTH - 1 || y < 1 || y > Grid.GRID_HEIGHT - 1) {
             System.exit(0);
         }
     }

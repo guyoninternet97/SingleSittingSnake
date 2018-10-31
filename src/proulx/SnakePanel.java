@@ -6,32 +6,66 @@ import java.util.ArrayList;
 
 public class SnakePanel extends JPanel {
 
-    private ArrayList<Rectangle> objects;
-    private Grid grid;
-    private Snake snake;
+    private ArrayList<Drawable> itemsToDraw;
+    private ArrayList<Updateable> itemsToUpdate;
+    Snake snake;
 
     public SnakePanel() {
         super();
-        objects = new ArrayList<>();
-        grid = Grid.instance;
-        snake = new Snake(this);
+        itemsToDraw = new ArrayList<>();
+        itemsToUpdate = new ArrayList<>();
+
+        initialize();
+    }
+
+    private void initialize() {
+        snake = Snake.instance;
+        snake.setStoredPanel(this);
+        itemsToUpdate.add(snake);
+        itemsToUpdate.add(ScoreboardHandler.instance);
+        itemsToDraw.add(Grid.instance);
+        itemsToDraw.add(snake);
+        itemsToDraw.add(ScoreboardHandler.instance);
+
+
     }
 
     public Snake getSnake() {
-        return this.snake;
+        Snake returnSnake = null;
+
+        for (Updateable item : itemsToUpdate) {
+            if (item instanceof Snake) {
+                returnSnake = (Snake) item;
+            }
+        }
+
+        return returnSnake;
     }
 
     public void update() {
-        snake.update();
+        for (Updateable item : itemsToUpdate) {
+            item.update();
+        }
+
     }
 
     public void paint(Graphics g) {
-        grid.draw(g);
-        snake.draw(g);
+        for (Drawable item : itemsToDraw) {
+            item.draw(g);
+        }
     }
 
     public PlayerTile getHead() {
-        return snake.getHead();
+        PlayerTile returnTile = null;
+
+        for (Updateable item : itemsToUpdate) {
+            if (item instanceof Snake) {
+                Snake snake = (Snake) item;
+                returnTile = snake.getHead();
+            }
+        }
+
+        return returnTile;
     }
 
 }
