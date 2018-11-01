@@ -102,8 +102,11 @@ public class Snake implements Drawable, Updateable{
         //TODO: comment this better
         for (PlayerTile tile : snakeTiles) {
             for (Pair<Integer, Integer> location : changePoints.keySet()) {
+                //If a tile's x and y coordinates equal a turnpoint's coordinates
                 if (tile.x == location.getKey() && tile.y == location.getValue()) {
+                    //Change direction of tile
                     tile.direction = changePoints.get(location);
+                    //If the snake's butt goes over a turnpoint, add the turnpoint as a candidate for removal
                     if (tile.equals(snakeTiles.get(snakeTiles.size() - 1))) {
                         locationsToRemove.add(location);
                     }
